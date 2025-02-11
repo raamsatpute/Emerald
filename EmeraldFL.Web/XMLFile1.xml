@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<ProductSales>
+<Product ID="1" Name="Product 1" Year ="2007">
+    <Jan>123,200</Jan>
+    <Feb>333,300</Feb>
+    <Mar>332,400</Mar>
+    <Apr>222,200</Apr>
+    <May>444,250</May>
+    <Jun>234,300</Jun>
+    <Jul>229,233</Jul>
+    <Aug>111,333</Aug>
+    <Sep>212,646</Sep>
+    <Oct>423,266</Oct>
+    <Nov>987,332</Nov>
+    <Dec>282,234</Dec>
+</Product>
+</ProductSales>

@@ -1,0 +1,260 @@
+﻿/****** Object:  StoredProcedure [dbo].[spOilMetrics_ByType]    Script Date: 6/18/2020 11:59:29 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Mustanshir Ghadiali
+-- Create date: 04-Dec-2019
+-- Description:	This SP Fetch Oil Pounds/Revenue as per ItemId and as per value passed in below parameter
+-- @LocationId : Holds value for passed location
+-- @YEAR : Holds value for passed year
+-- @Month : Holds value for passed month 
+-- @PlantCode : Holds value for passed Plants
+-- @PartCode : Holds value for passed Itemid
+-- @Key : Indicates if resultset required for Summary ('Summary') or for Export functionality ('Detail' or 'GrandTotal')
+-- =============================================
+
+--exec spOilMetrics_ByType '1',2019,10,'','','Summary',''
+--exec spOilMetrics_ByType '1,13',2019, 10, '','Oil249,OILCV','Detail','OILCV' --For Monthly Detail and with selected Item
+--exec spOilMetrics_ByType '1,13',2019, 10, '','Oil249,OILCV','Detail','' --For Monthly Detail and for all Item (If none of Item selected in Main Filter than all items else selected items)
+--exec spOilMetrics_ByType '1,13',2019, 10, '','Oil249,OILCV','GrandTotal','' --For Yearly Detail and with selected Item
+--exec spOilMetrics_ByType '1,13',2019, 10, '','Oil249,OILCV','GrandTotal','' --For Yearly Detail and for all Item (If none of Item selected in Main Filter than all items else selected items)
+--exec spOilMetrics_ByType '1,13',2019, 10, '','Oil249,OILCV','GrandTotal','' --For Yearly Detail and for all Item (If none of Item selected in Main Filter than all items else selected items)
+
+CREATE PROCEDURE [dbo].[spOilMetrics_ByType]
+	@LocationId as varchar(8000),
+	@YEAR as int,
+	@MONTH as int,
+	@PlantCode as varchar(Max),
+	@PartCode as varchar(Max),
+	@Key as varchar(15)
+AS
+BEGIN
+		Declare @PeriodFROM as date
+		Declare @PeriodTo as date
+		Declare @Cols as nvarchar(max)
+		Declare @NullToZeroCol as nvarchar(max)
+		Declare @TotCols as nvarchar(max)
+		Declare @MonthNumbers as nvarchar(max)
+		Declare @Query as nvarchar(max)
+		Declare @ColSum as varchar(8000)
+
+		--================================================
+		IF Exists (Select * from Information_Schema.Tables Where Table_Name = N'tmpAmtMonth')
+		Begin
+			Drop table tmpAmtMonth
+		End
+		IF Exists (Select * from Information_Schema.Tables Where Table_Name = N'tmpAmtTotal')
+		Begin
+			Drop table tmpAmtTotal
+		End
+		--================================================
+		if @PlantCode = '' 
+			set @PlantCode = null
+
+		if @PartCode = ''
+			set @PartCode = null
+
+		if @Month = '' 
+			set @Month = null
+			
+
+		set @PeriodTo = (SELECT DATEFROMPARTS(@YEAR, @MONTH, 1))
+		set @PeriodTo =(SELECT DATEADD(dd,-1,dateadd(mm,DATEDIFF(mm,0,@PeriodTo)+1,0)))
+		set @PeriodFROM = (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 11, 0))
+		set @MonthNumbers = cast(MONTH(@PeriodFROM) as varchar(2)) + ',' + cast(MONTH(@PeriodTo) as varchar(2))
+				
+		Select FORMAT(a,'MMM') + '_' + CAST(YEAR(a) as varchar) as Period into #dtPickUp From
+		(
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 11, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 10, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 9, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 8, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 7, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 6, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 5, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 4, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 3, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 2, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 1, 0)) as a
+		Union
+		Select (SELECT DATEADD(MONTH, DATEDIFF(MONTH, 0, @PeriodTo) - 0, 0)) as a
+		)a
+	
+		--===============================================================================================================================
+														-- Metal Pounds/Revenue 
+		--===============================================================================================================================
+		If @Key = 'Summary'
+		Begin
+			Select 
+			ItemId,
+			Entity, 
+			sum(Total) as GallonAmt, 
+			OilPeriod, FiscalYear, FiscalPeriod into #arQtyData from 
+			(
+				--For Gallons
+					Select
+					PartId as 'ItemId', 
+					'Gallons' as 'Entity',
+					case when Amount<0 then cast(QtyOrdSell as decimal (18,2))*(-1) else cast(QtyOrdSell as decimal(18,2)) end as Total,
+					FORMAT(datefromparts(fiscalyear,fiscalperiod,1),'MMM') + '_' + CAST([fiscalYear] as varchar) as [OilPeriod], 
+					fiscalyear, 
+					fiscalperiod
+					From trav_EO_ArDetailHistory ar
+					inner join #dtPickUp on #dtPickUp.Period = FORMAT(datefromparts([FiscalYear],ar.[FiscalPeriod],1),'MMM') + '_' + CAST([FiscalYear] as varchar)
+					Where catid like 'FG%' and partid like ('%OIL%') and GLAcctSales like '4%' and
+					Locationid in (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@LocationId, ',')) and 
+					Case WHEN @PartCode IS NULL THEN 1 
+					WHEN ar.PartId IN (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@PartCode, ',')) THEN 1 ELSE 0 END = 1 and
+					Case WHEN @PlantCode IS NULL THEN 1
+					WHEN ar.WhseId IN (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@PlantCode, ',')) THEN 1 ELSE 0 END = 1
+				UNION ALL
+				--For Revenue
+					Select 
+					PartId as 'ItemId', 
+					'Revenue' as 'Entity',
+					cast(Amount as decimal(18,2)) as Total,
+					FORMAT(datefromparts(fiscalyear,fiscalperiod,1),'MMM') + '_' + CAST([fiscalYear] as varchar) as [OilPeriod], 
+					fiscalyear, 
+					fiscalperiod
+					From trav_EO_ArDetailHistory ar
+					inner join #dtPickUp on #dtPickUp.Period = FORMAT(datefromparts([FiscalYear],ar.[FiscalPeriod],1),'MMM') + '_' + CAST([FiscalYear] as varchar)
+					Where catid like 'FG%' and partid like ('%OIL%') and GLAcctSales like '4%' and
+					Locationid in (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@LocationId, ',')) and 
+					Case WHEN @PartCode IS NULL THEN 1 
+					WHEN ar.PartId IN (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@PartCode, ',')) THEN 1 ELSE 0 END = 1 and
+					Case WHEN @PlantCode IS NULL THEN 1
+					WHEN ar.WhseId IN (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@PlantCode, ',')) THEN 1 ELSE 0 END = 1
+				UNION ALL -- Dummmy row added so incase if no data exist atleast we can have data structure, 
+						  -- this will eliminate need to check Datatable within Dataset in Front end. 
+					(
+						SELECT '', 'TBD', 0, '', @Year, @Month
+					)
+			)a group by ItemId, Entity, OilPeriod, fiscalyear,fiscalperiod
+
+			SELECT @cols = STUFF((SELECT ', ' + QUOTENAME(Period) 
+						FROM #dtPickUp 
+				FOR XML PATH(''), TYPE
+				).value('.', 'NVARCHAR(MAX)') 
+			,1,1,'')
+
+			SELECT @NullToZeroCol =(
+			  select char(10)+'  , ' + quotename(Period)
+			  +' = '+ + 'isnull('     + quotename(Period) + ',0)'
+									FROM #dtPickUp 
+							FOR XML PATH(''), TYPE
+							).value('.', 'NVARCHAR(MAX)') 
+
+			SELECT @query = 
+				'SELECT ItemId, Entity'+ @NullToZeroCol +' into tmpAmtMonth FROM
+				(
+					SELECT      
+						ItemId, Entity,	OilPeriod, GallonAmt
+					FROM #arQtyData
+				)X
+				PIVOT 
+				(   
+					 sum(GallonAmt)
+					FOR [OilPeriod] in (' + @cols + ')
+				) P'
+
+			EXEC SP_EXECUTESQL @query
+
+			SELECT @colSum = STUFF((SELECT '+' + QUOTENAME(Period) 
+						FROM #dtPickUp 
+				FOR XML PATH(''), TYPE
+				).value('.', 'NVARCHAR(MAX)') 
+			,1,1,'')
+
+			Delete from tmpAmtMonth where Entity = 'TBD' -- Row deleted as we now have data structure in place. 
+
+			SELECT @query = 
+			'Select ItemId, Entity' + @NullToZeroCol + ', ' + @colSum + ' as GrandTotal into tmpAmtTotal from tmpAmtMonth tm' 
+
+			EXEC SP_EXECUTESQL @query
+
+			SELECT @query = 
+			'Select ItemId, Entity' + @NullToZeroCol + ', ' + 'GrandTotal, GrandTotal/12 as Average
+			 from tmpAmtTotal order by ItemId, Entity'
+
+			EXEC SP_EXECUTESQL @query
+
+			--================================================
+			IF Exists (Select * from Information_Schema.Tables Where Table_Name = N'tmpAmtMonth')
+			Begin
+				Drop table tmpAmtMonth
+			End
+			IF Exists (Select * from Information_Schema.Tables Where Table_Name = N'tmpAmtTotal')
+			Begin
+				Drop table tmpAmtTotal
+			End
+			--================================================
+		End
+		Else If @Key = 'Detail'
+		Begin
+			print @PartCode
+			Select l.Description as Location, 
+				ar.FiscalYear as N'Fiscal Year',
+				FiscalPeriod as 'Period',
+				PartId as N'Item Id',
+				WhseId as N'Location Id',
+				SalesAcct as N'Sales Acct',
+				ar.[Description] as 'Description',
+				CONVERT(VARCHAR(10),TransDate, 101) as N'Transaction Date',
+				case when Amount < 0 then cast(QtyOrdSell as decimal(18,2))*(-1) else cast(QtyOrdSell as decimal (18,2)) end as N'Qty Order Sell',
+				 [Amount]=cast (Amount as decimal (18,2)) 
+			From trav_EO_ArDetailHistory ar 
+			inner join #dtPickUp on #dtPickUp.Period = FORMAT(datefromparts([FiscalYear],ar.[FiscalPeriod],1),'MMM') + '_' + CAST([FiscalYear] as varchar)
+			Inner Join Locations l on ar.LocationId = l.Id and (l.[Active] = 1 OR l.Id = 14)
+			Where catid like 'FG%' and partid like ('%OIL%') and GLAcctSales like '4%' and 
+			Case WHEN @Month IS NULL THEN 1 WHEN ar.FiscalPeriod = @Month THEN 1 ELSE 0 END = 1 and
+			Locationid in (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@LocationId, ',')) and 
+			Case WHEN @PartCode IS NULL THEN 1 
+				WHEN ar.PartId IN (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@PartCode, ',')) THEN 1 ELSE 0 END = 1 and
+			Case WHEN @PlantCode IS NULL THEN 1
+				WHEN ar.WhseId IN (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@PlantCode, ',')) THEN 1 ELSE 0 END = 1
+				
+		End
+		Else If @Key = 'GrandTotal'
+		Begin
+			Select l.Description as Location, 
+				ar.FiscalYear as N'Fiscal Year',
+				FiscalPeriod as 'Period',
+				PartId as N'Item Id',
+				WhseId as N'Location Id',
+				SalesAcct as N'Sales Acct',
+				ar.[Description] as 'Description',
+				CONVERT(VARCHAR(10),TransDate, 101) as N'Transaction Date',
+				case when Amount < 0 then cast(QtyOrdSell as decimal(18,2))*(-1) else cast(QtyOrdSell as decimal (18,2)) end as N'Qty Order Sell',
+				 [Amount]=cast (Amount as decimal (18,2)) 
+			From trav_EO_ArDetailHistory ar 
+			inner join #dtPickUp on #dtPickUp.Period = FORMAT(datefromparts([FiscalYear],ar.[FiscalPeriod],1),'MMM') + '_' + CAST([FiscalYear] as varchar)
+			Inner Join Locations l on ar.LocationId = l.Id and (l.[Active] = 1 OR l.Id = 14)
+			Where catid like 'FG%' and partid like ('%OIL%') and GLAcctSales like '4%' and 
+			Locationid in (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@LocationId, ',')) and 
+			Case WHEN @PartCode IS NULL THEN 1 
+				WHEN ar.PartId IN (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@PartCode, ',')) THEN 1 ELSE 0 END = 1 and
+			Case WHEN @PlantCode IS NULL THEN 1
+			WHEN ar.WhseId IN (SELECT FIELDVALUE FROM FN_STRING_TO_TABLE_STRING(@PlantCode, ',')) THEN 1 ELSE 0 END = 1
+		
+		End
+END
+
+
+GO
+
+

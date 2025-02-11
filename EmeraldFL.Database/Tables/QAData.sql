@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[QAData] (
+    [QADataId]        INT          IDENTITY (1, 1) NOT NULL,
+    [Job Type]        VARCHAR (15) NULL,
+    [Barcode]         VARCHAR (25) NULL,
+    [UID]             INT          NULL,
+    [KVA]             VARCHAR (10) NULL,
+    [RECEIVED DATE]   DATE         NULL,
+    [PRI_VOLT]        VARCHAR (20) NULL,
+    [SEC_VOLT]        VARCHAR (20) NULL,
+    [TEST DATE]       DATE         NULL,
+    [Paint DATE]      DATE         NULL,
+    [Serial Number]   VARCHAR (50) NULL,
+    [Customer Number] VARCHAR (10) NULL,
+    [Location]        INT          NULL,
+    [Type]            VARCHAR (15) NULL,
+    [Volts]           VARCHAR (10) NULL,
+    [Amps]            VARCHAR (15) NULL,
+    [Promise Date]    DATE         NULL,
+    [Ship Date]       DATE         NULL,
+    [DateStamp]       DATETIME     CONSTRAINT [DF_QAData_DateStamp] DEFAULT (getdate()) NULL,
+    [J_CUST_PO_]      VARCHAR (25) NULL,
+    [Taps]            VARCHAR (15) NULL,
+    CONSTRAINT [PK_QAData] PRIMARY KEY CLUSTERED ([QADataId] ASC)
+);
+

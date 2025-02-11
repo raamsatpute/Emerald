@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[NonPCBSendTo] (
+    [PCBSendToID] INT          IDENTITY (1, 1) NOT NULL,
+    [SendToName]  VARCHAR (50) NULL,
+    CONSTRAINT [PK_NonPCBSendTo] PRIMARY KEY CLUSTERED ([PCBSendToID] ASC)
+);
+

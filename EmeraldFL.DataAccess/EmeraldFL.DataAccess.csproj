@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{68589C10-1A0B-453E-B6CD-749D90CC8FB6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EmeraldFL.DataAccess</RootNamespace>
+    <AssemblyName>EmeraldFL.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.7.10.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Plus.EF6.1.7.10\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChecklistAreaTypeDataAccess.cs" />
+    <Compile Include="AssignedChecklistDataAccess .cs" />
+    <Compile Include="ChecklistItemDataAccess.cs" />
+    <Compile Include="ChecklistInspectionTypeDataAccess.cs" />
+    <Compile Include="ChecklistDataAccess.cs" />
+    <Compile Include="ChecklistItemResponseDataAccess.cs" />
+    <Compile Include="Framework\ShortGuid.cs" />
+    <Compile Include="Framework\SqlTypeInfo.cs" />
+    <Compile Include="Helper\Helper.cs" />
+    <Compile Include="IncidentReportDataAccess.cs" />
+    <Compile Include="IncidentCategoryDataAccess.cs" />
+    <Compile Include="InjuryDetailDataAccess.cs" />
+    <Compile Include="InjuryLocationDataAccess.cs" />
+    <Compile Include="InjuryTypeDataAccess.cs" />
+    <Compile Include="IncidentWitnessDataAccess.cs" />
+    <Compile Include="JobTitleDataAccess.cs" />
+    <Compile Include="ChecklistFrequencyDataAccess.cs" />
+    <Compile Include="Model\Configuration\AuditEntryMap.cs" />
+    <Compile Include="Model\Configuration\DisplayAuditPropertyMap.cs" />
+    <Compile Include="Model\Configuration\DisplayAuditEntryMap.cs" />
+    <Compile Include="Model\Configuration\JobTitleMap.cs" />
+    <Compile Include="Model\EmeraldDbContext.StoredProcs.cs" />
+    <Compile Include="AuditDataAccess.cs" />
+    <Compile Include="Model\Entities\DisplayAuditEntryProperty.cs" />
+    <Compile Include="Model\Entities\DisplayAuditEntry.cs" />
+    <Compile Include="Model\Entities\JobTitle.cs" />
+    <Compile Include="Model\NameValuePair.cs" />
+    <Compile Include="System\Web\HttpContext.cs" />
+    <Compile Include="UserDataAccess.cs" />
+    <Compile Include="LocationDataAccess.cs" />
+    <Compile Include="BacklogDataAccess.cs" />
+    <Compile Include="Caching\CachingProviderBase.cs" />
+    <Compile Include="Caching\GlobalCacheProvider.cs" />
+    <Compile Include="Diagnostics\Assert.cs" />
+    <Compile Include="Diagnostics\InterceptorLogger.cs" />
+    <Compile Include="Diagnostics\TraceWriter.cs" />
+    <Compile Include="Enums\EventActions.cs" />
+    <Compile Include="EventDataAccess.cs" />
+    <Compile Include="EnvChecklistDataAccess.cs" />
+    <Compile Include="Framework\GenericRepositoryGuid.cs" />
+    <Compile Include="Framework\IGenericRepositoryGuid.cs" />
+    <Compile Include="InjuryReportDataAccess.cs" />
+    <Compile Include="Model\Configuration\AssignedChecklistCommentsMap.cs" />
+    <Compile Include="Model\Configuration\AssignedChecklistItemResponseMap.cs" />
+    <Compile Include="Model\Configuration\AssignedChecklistMap.cs" />
+    <Compile Include="Model\Configuration\ChecklistAreaTypeMap.cs" />
+    <Compile Include="Model\Configuration\ChecklistFrequencyMap.cs" />
+    <Compile Include="Model\Configuration\ChecklistInspectionTypeMap.cs" />
+    <Compile Include="Model\Configuration\ChecklistItemMap.cs" />
+    <Compile Include="Model\Configuration\ChecklistMap.cs" />
+    <Compile Include="Model\Configuration\EventsMap.cs" />
+    <Compile Include="Model\Configuration\InjuryLocationMap.cs" />
+    <Compile Include="Model\Configuration\InjuryTypeMap.cs" />
+    <Compile Include="Model\Configuration\LocationsMap.cs" />
+    <Compile Include="Model\Configuration\UsersMap.cs" />
+    <Compile Include="Model\EmeraldDbContext.cs" />
+    <Compile Include="Framework\GenericRepository.cs" />
+    <Compile Include="Framework\IEntity.cs" />
+    <Compile Include="Framework\IGenericRepository.cs" />
+    <Compile Include="Framework\SoftDeleteAttribute.cs" />
+    <Compile Include="Framework\SoftDeleteInterceptor.cs" />
+    <Compile Include="Framework\SoftDeleteQueryVisitor.cs" />
+    <Compile Include="Framework\TenantAttribute.cs" />
+    <Compile Include="Framework\TenantInterceptor.cs" />
+    <Compile Include="Framework\TenantQueryVisitor.cs" />
+    <Compile Include="Model\EmeraldDbContext.DbSets.cs" />
+    <Compile Include="Model\Entities\AssignedChecklist.cs" />
+    <Compile Include="Model\Entities\AssignedChecklistComments.cs" />
+    <Compile Include="Model\Entities\AssignedChecklistItemResponse.cs" />
+    <Compile Include="Model\Entities\Checklist.cs" />
+    <Compile Include="Model\Entities\ChecklistAreaType.cs" />
+    <Compile Include="Model\Entities\ChecklistFrequency.cs" />
+    <Compile Include="Model\Entities\ChecklistInspectionType.cs" />
+    <Compile Include="Model\Entities\ChecklistItem.cs" />
+    <Compile Include="Model\Entities\InjuryLocation.cs" />
+    <Compile Include="Model\Entities\InjuryType.cs" />
+    <Compile Include="Framework\SelectionItem.cs" />
+    <Compile Include="Model\Entities\User.cs" />
+    <Compile Include="Model\Entities\Event.cs" />
+    <Compile Include="Model\Entities\Location.cs" />
+    <Compile Include="Model\IObjectContextAdapter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\Entities\State.cs" />
+    <Compile Include="Model\Configuration\StateMap.cs" />
+    <Compile Include="Model\Entities\IncidentCategory.cs" />
+    <Compile Include="Model\Configuration\IncidentCategoryMap.cs" />
+    <Compile Include="Model\Entities\IncidentReport.cs" />
+    <Compile Include="Model\Configuration\IncidentReportMap.cs" />
+    <Compile Include="Model\Entities\IncidentWitness.cs" />
+    <Compile Include="Model\Configuration\IncidentWitnessMap.cs" />
+    <Compile Include="Model\Entities\InjuryDetail.cs" />
+    <Compile Include="Model\Configuration\InjuryDetailMap.cs" />
+    <Compile Include="Model\Entities\InjuryVictim.cs" />
+    <Compile Include="Model\Configuration\InjuryVictimMap.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

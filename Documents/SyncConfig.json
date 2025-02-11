@@ -1,0 +1,10 @@
+{
+  //Connection String Name of the database receiving data
+  "connection": "4-Way_Electric",
+  //to or From
+  "sync_direction": "to",
+  //path to Sync Script
+  "script": "SyncFrom_4-Way_Electric.sql",
+  //Execution sort order.  These do no have to be sequential.  If the order doesn't matter, set them to a large number like 100
+  "step": "10"
+}

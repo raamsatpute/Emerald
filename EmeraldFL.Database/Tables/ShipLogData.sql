@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[ShipLogData] (
+    [ShipLogId]            INT        IDENTITY (1, 1) NOT NULL,
+    [Date]                 DATETIME   NULL,
+    [Datestamp]            DATETIME   CONSTRAINT [DF_ShipLogData_Datestamp] DEFAULT (getdate()) NULL,
+    [ShippingLogDriversId] FLOAT (53) NULL,
+    [Stops]                FLOAT (53) CONSTRAINT [DF_ShipLogData_Stops] DEFAULT ((0)) NULL,
+    [Pickups]              FLOAT (53) CONSTRAINT [DF_ShipLogData_Pickups] DEFAULT ((0)) NULL,
+    [Deliveries]           FLOAT (53) CONSTRAINT [DF_ShipLogData_Deliveries] DEFAULT ((0)) NULL,
+    [Miles]                FLOAT (53) CONSTRAINT [DF_ShipLogData_Miles] DEFAULT ((0)) NULL,
+    [TripTypeId]           INT        NULL,
+    [KVADelivered]         FLOAT (53) CONSTRAINT [DF_ShipLogData_KVADelivered] DEFAULT ((0)) NULL,
+    [AMPDelivered]         FLOAT (53) CONSTRAINT [DF_ShipLogData_AMPDelivered] DEFAULT ((0)) NULL,
+    [EnteredBy]            INT        NULL,
+    [MileageRate]          FLOAT (53) CONSTRAINT [DF_ShipLogData_MileageRate] DEFAULT ((0)) NULL,
+    [OilLoadDeliveries]    FLOAT (53) CONSTRAINT [DF_ShipLogData_OilLoadDeliveries] DEFAULT ((0)) NULL,
+    [Pole]                 FLOAT (53) CONSTRAINT [DF_ShipLogData_Pole] DEFAULT ((0)) NULL,
+    [OnePad]               FLOAT (53) CONSTRAINT [DF_ShipLogData_OnePad] DEFAULT ((0)) NULL,
+    [ThreePad]             FLOAT (53) CONSTRAINT [DF_ShipLogData_ThreePad] DEFAULT ((0)) NULL,
+    [Regulator]            FLOAT (53) CONSTRAINT [DF_ShipLogData_Regulator] DEFAULT ((0)) NULL,
+    [Recloser]             FLOAT (53) CONSTRAINT [DF_ShipLogData_Recloser] DEFAULT ((0)) NULL,
+    [ThreeRecloser]        FLOAT (53) CONSTRAINT [DF_ShipLogData_ThreeRecloser] DEFAULT ((0)) NULL,
+    [SubStation]           FLOAT (53) CONSTRAINT [DF_ShipLogData_SubStation] DEFAULT ((0)) NULL,
+    [EmailSent]            BIT        CONSTRAINT [DF_ShipLogData_EmailSent] DEFAULT ((0)) NULL,
+    CONSTRAINT [PK_ShipLogData] PRIMARY KEY CLUSTERED ([ShipLogId] ASC)
+);
+

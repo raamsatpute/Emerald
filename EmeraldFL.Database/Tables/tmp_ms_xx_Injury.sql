@@ -1,0 +1,22 @@
+﻿CREATE TABLE [dbo].[tmp_ms_xx_Injury] (
+    [Id]                   UNIQUEIDENTIFIER DEFAULT (newid()) NOT NULL,
+    [InjuryLocationTypeId] UNIQUEIDENTIFIER NOT NULL,
+    [PersonName]           VARCHAR (50)     NOT NULL,
+    [Description]          VARCHAR (MAX)    NOT NULL,
+    [OccuredOn]            DATETIME         NOT NULL,
+    [Area]                 VARCHAR (50)     NULL,
+    [FreakAccident]        BIT              NOT NULL,
+    [RequiresSopChange]    BIT              NOT NULL,
+    [SopChange]            VARCHAR (MAX)    NULL,
+    [RequiresHospital]     BIT              NOT NULL,
+    [DeclinedMedical]      BIT              NOT NULL,
+    [IsRecordable]         BIT              NOT NULL,
+    [EmsDispatched]        BIT              NOT NULL,
+    [EmsContacted]         VARCHAR (50)     NULL,
+    [EmsContactedAt]       TIME (7)         NULL,
+    [EmsContactNumber]     VARCHAR (12)     NULL,
+    [LocationId]           INT              NULL,
+    [LastUpdatedBy]        VARCHAR (50)     NULL,
+    [LastUpdatedOn]        DATETIME         NULL,
+    CONSTRAINT [tmp_ms_xx_constraint_PK_Injury1] PRIMARY KEY CLUSTERED ([Id] ASC)
+);

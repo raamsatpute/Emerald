@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[PCBSampleLog] (
+    [PCBSampleId]         INT           IDENTITY (1, 1) NOT NULL,
+    [Barcode]             VARCHAR (50)  NULL,
+    [SerialNumber]        VARCHAR (50)  NULL,
+    [Datestamp]           DATETIME      CONSTRAINT [DF_PCBSampleLog_Datestamp] DEFAULT (getdate()) NULL,
+    [Aroclor1242]         FLOAT (53)    CONSTRAINT [DF_PCBSampleLog_Aroclor1242] DEFAULT ((0)) NULL,
+    [Aroclor1254]         FLOAT (53)    CONSTRAINT [DF_PCBSampleLog_Aroclor1254] DEFAULT ((0)) NULL,
+    [Aroclor1260]         FLOAT (53)    CONSTRAINT [DF_PCBSampleLog_Aroclor1260] DEFAULT ((0)) NULL,
+    [AroclorOther]        FLOAT (53)    CONSTRAINT [DF_PCBSampleLog_AroclorOther] DEFAULT ((0)) NULL,
+    [TotalConc]           FLOAT (53)    CONSTRAINT [DF_PCBSampleLog_TotalConc] DEFAULT ((0)) NULL,
+    [CustomerID]          VARCHAR (50)  NULL,
+    [BatchID]             INT           NULL,
+    [PcbTestMethodId]     INT           NULL,
+    [DateComplete]        DATETIME      NULL,
+    [WipeUG]              FLOAT (53)    CONSTRAINT [[dbo]].[PCBSampleLog]]WipeUGDefault] DEFAULT ((0)) NULL,
+    [MIOPPM]              FLOAT (53)    CONSTRAINT [[dbo]].[PCBSampleLog]]MIOPPMDefault] DEFAULT ((0)) NULL,
+    [MOIPercent]          FLOAT (53)    CONSTRAINT [[dbo]].[PCBSampleLog]]MOIPercentDefault] DEFAULT ((0)) NULL,
+    [CustomerInformation] VARCHAR (75)  NULL,
+    [PPMREsult]           VARCHAR (5)   CONSTRAINT [[dbo]].[PCBSampleLog]]PPMREsultDefault] DEFAULT ('Pass') NULL,
+    [Comments]            VARCHAR (150) NULL,
+    [DBVValue]            FLOAT (53)    CONSTRAINT [[dbo]].[PCBSampleLog]]DBVValueDefault] DEFAULT ((0)) NULL,
+    [FTIRPercent]         FLOAT (53)    CONSTRAINT [[dbo]].[PCBSampleLog]]FTIRPercentDefault] DEFAULT ((0)) NULL,
+    [LastUpdated]         DATETIME      NULL,
+    CONSTRAINT [PK_PCBSampleLog] PRIMARY KEY CLUSTERED ([PCBSampleId] ASC)
+);
+
