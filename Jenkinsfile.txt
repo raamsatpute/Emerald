@@ -1,0 +1,13 @@
+pipeline {
+    agent any
+    options {
+        debug true
+    }
+    stages {
+        stage('Check') {
+            steps {
+                echo "Debugging pipeline execution..."
+            }
+        }
+    }
+}
